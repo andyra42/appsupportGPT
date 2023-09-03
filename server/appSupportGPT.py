@@ -30,6 +30,43 @@ from langchain.chains import RetrievalQA
 # or similar they are
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 
+# hf_hub_download returns the local path where the model was downloaded
+from huggingface_hub import hf_hub_download
+
+# The pipelines are a great and easy way to use models for inference. These pipelines are objects that abstract most
+# of the complex code from the library, offering a simple API dedicated to several tasks, including Named Entity
+# Recognition, Masked Language Modeling, Sentiment Analysis, Feature Extraction and Question Answering
+from langchain.llms import HuggingFacePipeline, LlamaCpp
+
+# Prompt templates are pre-defined recipes for generating prompts for language models. A template may include
+# instructions, few-shot examples, and specific context and questions appropriate for a given task. LangChain
+# provides tooling to create and work with prompt templates.
+from langchain.prompts import PromptTemplate
+
+# A vector store takes care of storing embedded data and performing vector search
+# Chroma is a vector store and embeddings database designed from the ground-up to make it easy to build AI
+# applications with embeddings
+from langchain.vectorstores import Chroma
+
+# Transformers provides APIs to quickly download and use those pretrained models on a given text,
+# fine-tune them on your own datasets and then share them with the community
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    GenerationConfig,
+    LlamaForCausalLM,
+    LlamaTokenizer,
+    pipeline,
+)
+
+from constants import CHROMA_SETTINGS, EMBEDDING_MODEL_NAME, PERSIST_DIRECTORY, MODEL_ID, MODEL_BASENAME
+
+DEVICE_TYPE = "cuda" if torch.cuda.is_available() else "cpu"
+SHOW_SOURCES = True
+logging.info(f"Running on: {DEVICE_TYPE}")
+logging.info(f"Display Source Documents set to: {SHOW_SOURCES}")
+
+
 def load_model(device_type, model_id, model_basename=None):
     """
     Select a model for text generation using the HuggingFace library.
@@ -90,7 +127,7 @@ def load_model(device_type, model_id, model_basename=None):
                 quantize_config=None,
             )
     elif (
-        device_type.lower() == "cuda"
+            device_type.lower() == "cuda"
     ):  # The code supports all huggingface models that ends with -HF or which have a .bin
         # file in their HF repo.
         logging.info("Using AutoModelForCausalLM for full models")
@@ -133,6 +170,7 @@ def load_model(device_type, model_id, model_basename=None):
     logging.info("Local LLM Loaded")
 
     return local_llm
+
 
 if __name__ == "__main__":
     logging.basicConfig(
