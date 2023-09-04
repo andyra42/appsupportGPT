@@ -66,6 +66,17 @@ SHOW_SOURCES = True
 logging.info(f"Running on: {DEVICE_TYPE}")
 logging.info(f"Display Source Documents set to: {SHOW_SOURCES}")
 
+EMBEDDINGS = HuggingFaceInstructEmbeddings(model_name=EMBEDDING_MODEL_NAME, model_kwargs={"device": DEVICE_TYPE})
+
+# load the vectorstore
+DB = Chroma(
+    persist_directory=PERSIST_DIRECTORY,
+    embedding_function=EMBEDDINGS,
+    client_settings=CHROMA_SETTINGS,
+)
+
+RETRIEVER = DB.as_retriever()
+
 
 def load_model(device_type, model_id, model_basename=None):
     """
@@ -172,8 +183,41 @@ def load_model(device_type, model_id, model_basename=None):
     return local_llm
 
 
+LLM = load_model(device_type=DEVICE_TYPE, model_id=MODEL_ID, model_basename=MODEL_BASENAME)
+
+QA = RetrievalQA.from_chain_type(
+    llm=LLM, chain_type="stuff", retriever=RETRIEVER, return_source_documents=SHOW_SOURCES
+)
+
+app = Flask(__name__)
+
+
+@app.route("/api/prompt_route", methods=["GET", "POST"])
+def prompt_route():
+    global QA
+    user_prompt = request.form.get("user_prompt")
+    # user_prompt = request.args.get("user_prompt")
+    if user_prompt:
+        print(f'User Prompt: {user_prompt}')
+        # Get the answer from the chain
+        res = QA(user_prompt)
+        answer, docs = res["result"], res["source_documents"]
+
+        prompt_response_dict = {"Prompt": user_prompt, "Answer": answer, "Sources": []}
+
+        for document in docs:
+            prompt_response_dict["Sources"].append(
+                (os.path.basename(str(document.metadata["source"])), str(document.page_content))
+            )
+
+        return jsonify(prompt_response_dict), 200
+    else:
+        return "No user prompt received", 400
+
+
 if __name__ == "__main__":
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(filename)s:%(lineno)s - %(message)s", level=logging.INFO
     )
-    print("Main Application")
+    print("Main Application run")
+    app.run(debug=False, port=5110)
