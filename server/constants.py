@@ -10,7 +10,7 @@ from langchain.document_loaders import CSVLoader, PDFMinerLoader, TextLoader, Un
 ROOT_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 # Define the folder for storing database
-SOURCE_DIRECTORY = f"{ROOT_DIRECTORY}\source_documents"
+SOURCE_DIRECTORY = f"{ROOT_DIRECTORY}/source_documents"
 
 PERSIST_DIRECTORY = f"{ROOT_DIRECTORY}/DB"
 
@@ -47,13 +47,13 @@ EMBEDDING_MODEL_NAME = "hkunlp/instructor-large"
 # Select the Model ID and model_basename
 # load the LLM for generating Natural Language responses
 
-# MODEL_ID = "TheBloke/Llama-2-7B-Chat-GGML"
-# MODEL_BASENAME = "llama-2-7b-chat.ggmlv3.q4_0.bin"
+MODEL_ID = "TheBloke/Llama-2-7B-Chat-GGML"
+MODEL_BASENAME = "llama-2-7b-chat.ggmlv3.q4_0.bin"
 
 # for HF models
 # MODEL_ID = "TheBloke/vicuna-7B-1.1-HF"
-MODEL_BASENAME = None
-MODEL_ID = "TheBloke/Wizard-Vicuna-7B-Uncensored-HF"
+# MODEL_BASENAME = None
+# MODEL_ID = "TheBloke/Wizard-Vicuna-7B-Uncensored-HF"
 # MODEL_ID = "TheBloke/guanaco-7B-HF"
 # MODEL_ID = 'NousResearch/Nous-Hermes-13b' # Requires ~ 23GB VRAM. Using STransformers
 # alongside will 100% create OOM on 24GB cards.
