@@ -1,0 +1,122 @@
+What is meant by application scaling in Openshift?
+Ans: In the OpenShift application, auto-scaling is otherwise called pod auto-scaling. There are two sorts of utilization scaling as follows. 
+
+1. Up (vertical scaling) 
+
+2. Out (Horizontal scaling) 
+
+Envision, you have a compelling beginning up, and your client base is developing. As the client base grows, application burden and request increments. To stay aware of this interest, you either need to add workers (flat scaling) or get greater ones (vertical scaling). 
+
+Vertical Scaling: To oblige a higher burden utilizing vertical scaling, your application stays in a single spot, and you give it more assets. For instance, you may add a giant machine with more CPUs, quicker CPUs, memory, or circle space. The cost keeps on ascending as you add more equipment assets. 
+
+Horizontal Scaling: To oblige higher burden utilizing level scaling, numerous examples of an application are made, and the application load is adjusted across freehubs. 
+
+This has a few favorable circumstances since you can: 
+
+Utilize customary equipment and consequently keep the cost of your equipment utilize sensibly 
+Send hundreds or thousands of hubs and burden balance the application between them.
+
+What is Source-to-image Strategy ?
+
+In this from source code images are created.In Source-to-image strategy source code is downloaded and compiled and deployed in same container.From same code image is created.
+
+What is Deployment Strategies?
+
+OpenShift provides deployment strategies that are defined by each deployment con‐figuration. Each application will have its own requirements for availability and quality of service during a deployment. Architectural consideration should be made at design and development time for applications to take into account state (e.g., session state, atomic data—that is, what is the source of truth) and its effects on the quality of business service during updates to the application. For example, an application server that clusters server-side session state will have different concerns than a stateless application that relies on client-side caching only.
+
+OpenShift provides strategies to support a variety of deployment scenarios, which we
+will cover in the following sections.
+
+What is Deployment Pod Resources?
+
+A deployment is completed by a pod that consumes resources (memory and CPU) on a node. By default, pods consume unbounded node resources. However, if a project specifies default container limits, then pods consume resources up to those limits. Another way to limit resource use is to (optionally) specify resource limits as part of the deployment strategy.
+
+What is  blue-green deployments?
+
+The blue-green deployment strategy minimizes the time it takes to perform a deployment cutover by ensuring you have two versions of your application stacks available during the deployment. We can make use of the service and routing tiers to easily switch between our two running application stacks—hence it is very simple and fast to perform a rollback.
+
+What is Port Binding?
+
+OpenShift ships with a HAProxy-based router which provides ingress routing of HTTP/HTTPS traffic into the running pods. While the main use case is to support web traffic, it is also possible to support non-HTTP traffic (e.g., AMQP) by passing the traffic over SSL and adding the route hostname via the Server Name Indication (SNI) header. It is also possible to integrate existing load/balancing tiers into Open‐Shift.
+
+What are labels in Open‐Shift?
+
+Labels are identifying metadata consisting of key/value pairs attached to resources. Labels are used to add identifying attributes to objects that are relevant to users and can be used to reflect architectural or organizational concepts. Labels can be used in conjunction with label selectors to uniquely identify individual resources or groups of resources.
+
+Examples:
+
+Release
+
+Environment
+
+Relationship
+
+DMZBased
+
+Tier
+
+Node types
+
+User type
+
+What are Annotations in Open‐Shift?
+
+Annotations are similar to labels but primarily concerned with attaching nonidentifying information, which is primarily used by other clients such as tools or libraries. Annotations don’t have the concept of selectors.
+
+Annotation examples
+• example.com/skipValidation=true
+• example.com/MD5Checksum=23798FGH
+• example.com/BUILDDATE=3479845
+
+What is Downward API in OpenShift?
+
+The Downward API is a mechanism whereby pods can retrieve their metadata without having to call into the Kubernetes API. The following metadata can be retrieved and used to configure the running pods:
+
+Labels
+
+Annotations
+
+Pod name, namespace, and IP address
+
+Pod CPU/memory request and limit information
+
+Certain information can be mounted into the pod as an environment variable,whereas other information can be accessed as files within a volume.
+
+What is Build Configurations?
+
+Builds are configured and controlled by build configuration resources. Build configurations contain the details of the chosen build strategy as well as the source of the developer-supplied artifacts such as Git location, the details of the builder image to be used, and the output image.
+
+What is SSH authentication?
+
+OpenShift uses the Secure Shell (SSH) network protocol to authenticate your account credentials to the OpenShift servers for secure communication. Successful authentication is necessary to manage your cloud environment, and OpenShift supports both RSA and DSA keys for SSH authentication. This section describes briefly how OpenShift authentication works, and provides information on how to manage SSH keys for OpenShift user accounts.
+
+25) Can you explain about Kubernetes Infrastructure in OpenShift?
+
+A) Within OpenShift Origin, Kubernetes manages containerized applications across a set of containers or hosts and provides mechanisms for deployment, maintenance, and application-scaling. The Docker service packages, instantiates, and runs containerized applications.
+
+A Kubernetes cluster consists of one or more masters and a set of nodes. You can optionally configure your masters for high availability (HA) to ensure that the cluster has no single point of failure.
+
+Controllers, which read those APIs, apply changes to other objects, and report status or write back to the object.
+
+26) What are Masters?
+
+A) The master is the host or hosts that contain the master components, including the API server, controller manager server, and etcd. The master manages nodes in its Kubernetes cluster and schedules pods to run on nodes.
+
+27) What are Nodes?
+
+A) Nodes – A node provides the runtime environments for containers. Each node in a Kubernetes cluster has the required services to be managed by the master. Nodes also have the required services to run pods, including the Docker service, a kubelet, and a service proxy.
+
+28) What is Kubelet?
+
+A) Each node has a kubelet that updates the node as specified by a container manifest, which is a YAML file that describes a pod. The kubelet uses a set of manifests to ensure that its containers are started and that they continue to run.
+
+29) What are Init Containers?
+
+A) A pod can have init containers in addition to application containers. Init containers allow you to reorganize setup scripts and binding code. An init container differs from a regular container in that it always runs to completion. Each init container must complete successfully before the next one is started.
+
+What are services in OpenShift?
+Services, like pods, are REST objects. An internal load balancer is provided by a Kubernetes service. It identifies a collection of replicated pods to which it will proxy connections received. Backing pods can be added or deleted from a service at any time while it stays consistently available, allowing anything that relies on it to refer to it at the same address. The default service clusterIP addresses come from OpenShift Online's internal network and are used to allow pods to communicate with one another.
+
+A replication controller keeps track of how many replicas of a pod are active at any given time. If a pod exits or is removed, the replication controller creates more up to the specified number. Similarly, if there are more running than wanted, it deletes as many as are required to meet the specified number. With the idea of deployments, OpenShift Online expands support for the software development and deployment lifecycle, building on replication controllers. A deployment just installs a new replication controller and allows it to start up pods in the most basic example. OpenShift Online deployments, on the other hand, allow you to transition from a current image deployment to a new one, as well as define hooks to run before or after the replication controller is created.
+
+When a service is accessed, it is given an IP address and port pair that redirects to the appropriate underlying pod. A label selector is used by a service to locate all running containers that provide a specific network service on a specific port
